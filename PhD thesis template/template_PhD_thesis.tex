@@ -1,0 +1,361 @@
+% !TeX program = lualatex 
+% This tells overleaf and some tex-editors to use LuaLaTeX
+% ================================================================
+% Accessible PhD Thesis Template (Mathematics)
+% Recommended compiler: LuaLaTeX
+% Produces near PDF/UA-compliant accessible PDFs
+% Version: 1 May 2026
+% ================================================================
+
+%\DocumentMetadata{
+%	tagging = on,
+%	lang = en-GB,
+%	pdfstandard = ua-2,
+%	tagging-setup = {
+%		math/setup = {mathml-AF, mathml-SE},
+%		extra-modules = {verbatim-mo},
+%		table/header-rows = 1
+%	}
+%}
+
+\documentclass[a4paper,12pt,twoside,openright]{book}
+
+% ================================================================
+% LATEX ENGINE & FONTS
+% ================================================================
+\usepackage{ifluatex}
+\ifLuaTeX
+% Best choice for accessibility
+\usepackage{unicode-math}
+%\setmainfont{TeX Gyre Termes}
+%\setmathfont{Latin Modern Math}
+\else
+% Still tagged, but reduced math accessibility
+\usepackage{amsmath,amsfonts,amssymb}
+\fi
+
+% ================================================================
+% GENERAL PACKAGES
+% ================================================================
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{url}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+
+% Hyperref with accessible colours
+% Hyperref colours are chosen for accessibility and contrast.
+% Do not remove unless necessary.
+\usepackage[pagebackref]{hyperref}
+\definecolor{MyDarkBlue}{rgb}{0.0, 0.0, 0.545}
+\definecolor{MyDarkGreen}{rgb}{0.0, 0.5, 0.0}
+\definecolor{MyDarkRed}{rgb}{0.5, 0.0, 0.0}
+\definecolor{MyDarkPurple}{rgb}{0.294, 0, 0.510}
+\hypersetup{
+	colorlinks=true,         % Enable colored links
+	linkcolor=MyDarkBlue,    % Color for internal links
+	filecolor=MyDarkGreen,   % Color for file links
+	urlcolor=MyDarkRed,      % Color for URLs
+	citecolor=MyDarkPurple   % Color for citations
+}
+% ================================================================
+% PAGE LAYOUT (using geometry)
+% ================================================================
+\usepackage[a4paper,margin=3cm,includeheadfoot]{geometry}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% ================================================================
+% BLANK PAGE MACRO: This command adds a blank clearpage with the text 'This page intentionally left blank'
+% ================================================================
+\newcommand{\clearpageBlank}{\clearpage
+	\pagestyle{plain}
+	\vspace*{\fill}
+	\begin{center}
+		\textit{This page intentionally left blank}
+	\end{center}
+	\vspace*{\fill}
+	\clearpage}
+
+% ================================================================
+% ACCESSIBILITY TYPOGRAPHY OPTIONS
+% ================================================================
+\renewcommand{\familydefault}{\sfdefault} % Recommended: Sans-serif font for readability
+\usepackage{setspace}
+\onehalfspacing
+
+% ================================================================
+% Enumeration
+% ================================================================
+%\usepackage{enumitem}
+%\makeatletter
+%\AtBeginDocument{%
+%  \renewcommand{\labelenumi}{\textup{(\alph{enumi})}}
+%  \renewcommand{\labelenumii}{\textup{(\roman{enumii})}}
+%}
+%\makeatother
+
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+%\AtBeginDocument{\numberwithin{lstlisting}{section}} 
+
+
+% ================================================================
+% THEOREM ENVIRONMENTS (tagging‑safe tcolorbox)
+% This section sets up theorem environments with tcolorbox that have frames
+% around them and are accessible at the same time.
+% You can simply use them as:
+% \begin{theorem}[Optional Name] ... \end{theorem}
+% No need to modify anything here.
+% If you don't want to have theorems in a frame, the standard environments are defined below, but commented out.
+% ================================================================
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{breakable}
+
+% Setting a counter 
+\newcounter{thmcounter}[section]
+\renewcommand{\thethmcounter}{\thesection.\arabic{thmcounter}}
+
+% Theorem 
+\newtcolorbox{theobox}{
+	enhanced,
+	breakable,
+	colback=MyDarkBlue!5,
+	colframe=MyDarkBlue!80,
+	left=6pt,right=6pt,top=6pt,bottom=6pt,
+	boxrule=1.2pt,
+	arc=4pt
+}
+\NewDocumentEnvironment{theorem}{O{}}
+{
+	\refstepcounter{thmcounter}
+	\begin{theobox}
+		\textbf{Theorem~\thethmcounter}
+		\if\relax\detokenize{#1}\relax\else\textbf{ (#1)}\fi
+		\par\medskip
+	}
+{
+	\end{theobox}
+}
+% LEMMA
+\newtcolorbox{lembox}{
+	enhanced,
+	breakable,
+	colback=MyDarkBlue!5,
+	colframe=MyDarkBlue!70,
+	left=6pt,right=6pt,top=6pt,bottom=6pt,
+	boxrule=1.0pt,
+	arc=4pt
+}
+\NewDocumentEnvironment{lemma}{O{}}{
+	\refstepcounter{thmcounter}
+	\begin{lembox}
+		\textbf{Lemma~\thethmcounter}
+		\if\relax\detokenize{#1}\relax\else\textbf{ (#1)}\fi
+		\par\medskip
+	}{
+	\end{lembox}
+}
+
+\NewDocumentEnvironment{corollary}{O{}}
+{
+  \refstepcounter{thmcounter}
+  \begin{lembox}
+    \textbf{Corollary~\thethmcounter}
+    \if\relax\detokenize{#1}\relax\else\textbf{ (#1)}\fi
+    \par\medskip
+}
+{
+  \end{lembox}
+}
+
+\NewDocumentEnvironment{proposition}{O{}}
+{
+  \refstepcounter{thmcounter}
+  \begin{lembox}
+    \textbf{Proposition~\thethmcounter}
+    \if\relax\detokenize{#1}\relax\else\textbf{ (#1)}\fi
+    \par\medskip
+}
+{
+  \end{lembox}
+}
+
+
+% DEFINITION
+\newtcolorbox{defbox}{
+	enhanced,
+	breakable,
+	colback=MyDarkGreen!5,
+	colframe=MyDarkGreen!70,
+	left=6pt,right=6pt,top=6pt,bottom=6pt,
+	boxrule=1.0pt,
+	arc=4pt
+}
+\NewDocumentEnvironment{definition}{O{}}
+{
+	\refstepcounter{thmcounter}
+	\begin{defbox}
+		\textbf{Definition~\thethmcounter}
+		\if\relax\detokenize{#1}\relax\else\textbf{ (#1)}\fi
+		\par\medskip
+	}
+{
+	\end{defbox}
+}
+
+% EXAMPLE (purple)
+\newtcolorbox{examplebox}{
+  enhanced,
+  breakable,
+  colback=MyDarkPurple!5,
+  colframe=MyDarkPurple!70,
+  left=6pt,right=6pt,top=6pt,bottom=6pt,
+  boxrule=0.8pt,
+  arc=4pt
+}
+\NewDocumentEnvironment{example}{O{}}{
+  \refstepcounter{thmcounter}
+  \begin{examplebox}
+    \textbf{Example~\thethmcounter}
+    \if\relax\detokenize{#1}\relax\else\textbf{ (#1)}\fi
+    \par\medskip
+}
+{
+  \end{examplebox}
+}
+% ================================================================
+% Theorem Environments, simpler version without frames
+% ================================================================
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{example}[theorem]{Example}
+%\newtheorem{corollary}[theorem]{Corollary}
+%\theoremstyle{definition}
+%\newtheorem{definition}[theorem]{Definition}
+%\newtheorem{remark}[theorem]{Remark}
+\newtheorem{remark}{Remark}[section]
+%-------------------------------- 
+
+% ================================================================
+% Inclusion of code: SIMPLE CODE BOX without numbering and title
+% ================================================================
+\newtcolorbox{codebox}{
+	breakable,
+	colback=black!5,
+	colframe=black!60,
+	boxrule=0.5pt,
+	before upper=\ttfamily\small
+}
+% ================================================================
+% USER MACROS
+% ================================================================
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+% ================================================================
+% INDEX: To create an index, uncomment the following two lines and the lines at the end of this file
+% ================================================================
+% \usepackage{makeidx}
+% \makeindex
+% ================================================================
+% TITLE PAGE
+% ================================================================
+\title{\Huge Accessible PhD Thesis Template}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+\frontmatter
+% ================================================================
+% Titlepage 
+% ================================================================
+\maketitle
+% ================================================================
+% Abstract 
+% ================================================================
+\pagenumbering{roman}
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+This document provides an accessible \LaTeX{} template for PhD theses in
+mathematics. It is designed to help students meet Lancaster University's
+requirements on digital accessibility while keeping the writing process simple
+and close to standard \LaTeX{} practice.
+
+The template uses the new PDF tagging system of \LaTeX{} (available in recent
+\TeX{} Live distributions), which enables the production of tagged PDF/UA--2
+documents with improved support for screen readers.  Common elements of a thesis
+such as headings, lists, figures, tables, mathematical expressions, theorems and
+code examples are preconfigured to work as accessibly as current tools allow.
+
+The aim of this template is not to make students experts in accessibility, but
+to ensure that an accessible thesis can be produced without additional effort.
+Students can simply use the provided environments in the usual way, following
+the brief guidance included in Chapter~1.  Where full accessibility is not yet
+possible (for example, with complex tables or highlighted program code),
+practical alternatives are given.
+In particular, practical advice is given on how to use this template and how to deal with typical issues that may arise during compilation.
+
+This template may be used as a starting point for writing a PhD thesis or as a
+reference for including accessible mathematical content in other documents.
+
+\vspace{1em}
+\textbf{Updated:} Mai~2026 (minor adjustments) \\
+\textbf{Created:} February~2026 %\\
+	%	\textbf{Last updated:} \today
+% ================================================================
+% Acknowledgements
+% ================================================================
+\chapter*{Acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+
+I thank \ldots
+
+
+% ================================================================
+% Tableofcontents, list of figues and list of tables
+% ================================================================
+\tableofcontents %put toc in
+\listoffigures % list of figues (remove if not needed)
+\listoftables % list of tables (remove if not needed)
+\clearpageBlank
+\mainmatter
+%\setcounter{page}{1} %reset the page counter
+%\pagestyle{plain} 
+%\pagenumbering{arabic}
+% ================================================================
+% CONTENT
+% ================================================================
+\include{chap_accessibility} % This chapter contains some information about this file and about accessibility.
+\clearpageBlank
+\include{chap_intro}
+\clearpageBlank
+\include{chap_intro2}
+\clearpageBlank
+\appendix
+\include{chap_appendix}
+% ================================================================
+% REFERENCES
+% ================================================================
+\backmatter
+\bibliographystyle{plain}
+\bibliography{literature}
+% ================================================================
+% Index 
+% If you are using makeindex  hen uncomment the following three lines to make sure the index is printed and is occuring correct in the table of contents
+% ================================================================	
+%\phantomsection % To be added if hypterref is used
+%\addcontentsline{toc}{chapter}{Index}
+%\printindex
+
+\end{document}
