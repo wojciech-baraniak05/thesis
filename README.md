@@ -8,6 +8,7 @@ Options > Configure TeXstudio > Commands > LuaLatex i wpisz:
 lualatex.exe -synctex=1 -interaction=nonstopmode -aux-directory=build %.tex
 potem show advanced options > build > Additional Search Paths > Log File > ./build
 
+https://bg.pw.edu.pl/index.php/zasoby/lista-e-baz - tutaj source
 
 ### Todo literatura
 
